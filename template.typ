@@ -1,11 +1,86 @@
-// The project function defines how your document looks.
-// It takes your content and some metadata and formats it.
-// Go ahead and customize it to your liking!
-#let fontfamily = (
-  heiti : ("Times New Roman", "Heiti SC", "Heiti TC", "SimHei", "PT Sans"),
+// Font Declaration
+
+#let oldfont = (
+  heiti : ("Heiti SC", "Heiti TC", "SimHei", "PT Sans"),
+  heitibf : ("Heiti SC", "Heiti TC", "SimHeiBold", "SimHei"),
   songti : ("Times New Roman", "Songti SC", "Songti TC", "SimSun"),
+  songtibf : ("Times New Roman", "Songti SC", "Songti TC", "SimSunBold", "SimSun"),
   zhongsong : ("Times New Roman", "STZhongsong", "SimSun")
 )
+
+#let fontfamily = (
+  heiti : (
+    regular : ("Heiti SC", "Heiti TC", "SimHei", "PT Sans"),
+    bold : ("Heiti SC", "Heiti TC", "SimHeiBold", "SimHei")),
+  songti : (
+    regular : ("Times New Roman", "Songti SC", "Songti TC", "SimSun"),
+    bold : ("Times New Roman", "Songti SC", "Songti TC", "STZhongsong", "SimSunBold", "SimSun"),
+  ),
+  zhongsong : (
+    regular : ("Times New Roman", "STZhongsong", "SimSun"),
+  )
+)
+
+#let size2pt = (
+  chuhao: 42pt,
+  xiaochu: 36pt,
+  yihao: 26pt,
+  xiaoyi: 24pt,
+  erhao: 22pt,
+  xiaoer: 18pt,
+  sanhao: 16pt,
+  xiaosan: 15pt,
+  sihao: 14pt,
+  xiaosi: 12pt,
+  wuhao: 10.5pt,
+  xiaowu: 9pt,
+  liuhao: 7.5pt,
+  xiaoliu: 6.5pt,
+  qihao: 5.5pt,
+  bahao: 5pt,
+)
+
+#let Font_Constructor(font: fontfamily.songti.regular, fontsize : size2pt.wuhao, it) = {
+  if(type(it) == "dictionary" and it.at("children", default: false) != false) {
+    for i in it.children {
+      if (i.func()==strong) {
+        text(
+          size:fontsize,
+          font: font.regular,
+          weight: "bold",
+          i)
+      } else {
+        text(
+          size:fontsize,
+          font: font.regular,
+          weight: "regular",
+          i)
+      }
+    }
+  } else if (type(it) == "function" and it.func() == strong) {
+    text(
+      size:fontsize,
+      font: font.at("bold", default: font.regular),
+      weight: "regular",
+      it)
+  } else { 
+    text(
+      size:fontsize,
+      font: font.regular,
+      weight: "regular",
+      it)
+  }
+}
+
+#let heiti(fontsize, it) = Font_Constructor(
+  font: fontfamily.heiti, 
+  fontsize: fontsize, 
+  it
+)
+#let songti(fontsize, it) = Font_Constructor(
+  font: fontfamily.songti, 
+  fontsize: fontsize, 
+  it)
 
 #let project(
   title: ("标题","TITLE"),
@@ -36,11 +111,7 @@
     v(1.75cm)
   
     align(center)[
-    #text(
-        size: 22pt,
-        font: fontfamily.zhongsong,
-        weight: "bold"
-      )[本科毕业论文（设计）]
+      #songti(size2pt.erhao)[*本科毕业论文（设计）*]
     ]
     v(4.1cm)
   
@@ -53,17 +124,11 @@
     }
     let infovalue(data) = {
         rect(
-          stroke: (bottom: 1pt + black), width:100%, text(
-          font: fontfamily.zhongsong,
-          size: 16pt
-        )[#data] 
+          stroke: (bottom: 1pt + black), width:100%, songti(size2pt.sihao, data)
         )
     }
     let infokey(data) = {
-      text(
-          font: fontfamily.zhongsong,
-          size: 16pt,
-        )[#juststr(data,4)：]
+      songti(size2pt.sihao)[#juststr(data,4)：]
     }
     align(center)[#table(
       columns: (auto, 9cm),
@@ -80,10 +145,7 @@
   
   
     align(bottom + center)[
-      #text(
-        font: fontfamily.zhongsong,
-        size: 12pt,
-      )[上海科技大学 \ #year#[年]#month#[月]]
+      #songti(size2pt.xiaosi)[上海科技大学 \ #year#[年]#month#[月]]
     ]
   }
 
@@ -97,27 +159,17 @@
     v(1.75cm)
   
     align(center)[
-    #text(
-        size: 22pt,
-        font: fontfamily.heiti,
-        weight: "bold"
-      )[THESIS]
+      #heiti(size2pt.erhao)[*THESIS*]
     ]
     v(4.1cm)
 
     let infovalue(data) = {
         rect(
-          stroke: (bottom: 1pt + black), width:100%, text(
-          font: fontfamily.zhongsong,
-          size: 16pt
-        )[#data] 
+          stroke: (bottom: 1pt + black), width:100%, songti(size2pt.sihao, data) 
         )
     }
     let infokey(data) = {
-      align(left)[#text(
-          font: fontfamily.zhongsong,
-          size: 16pt,
-        )[#data: ]]
+      align(left)[#songti(size2pt.sihao)[#data: ]]
     }
     align(center)[#table(
       columns: (auto, 9cm),
@@ -133,10 +185,7 @@
     )]
   
     align(bottom + center)[
-      #text(
-        font: fontfamily.zhongsong,
-        size: 12pt,
-      )[ShanghaiTech University \ Date: #year / #month]
+      #songti(size2pt.xiaosi)[ShanghaiTech University \ Date: #year / #month]
     ]
   }
 
@@ -146,17 +195,13 @@
   {
     set text(  
         size: 14pt,
-        font: fontfamily.songti,
+        font: fontfamily.songti.regular,
       )
     v(2.2cm)
     align(center)[
-      #text(
-          size: 18pt,
-          font: fontfamily.heiti,
-          weight: "bold"
-        )[
+      #heiti(size2pt.xiaoer)[
           #set par(justify: false, leading: 1.15em, first-line-indent: 2em)
-          上海科技大学 \ 毕业论文(设计)学术诚信声明
+          *上海科技大学 \ 毕业论文(设计)学术诚信声明*
         ]
     ]
 
@@ -179,13 +224,9 @@
     
     v(2.2cm)
     align(center)[
-      #text(
-          size: 18pt,
-          font: fontfamily.heiti,
-          weight: "bold"
-        )[
+      #heiti(size2pt.xiaoer)[
           #set par(justify: false, leading: 1.15em)
-          上海科技大学 \ 毕业论文（设计）版权使用授权书
+          *上海科技大学 \ 毕业论文（设计）版权使用授权书*
         ]
     ]
     
@@ -239,7 +280,7 @@
         grid(
         columns: (auto, 1fr), 
         [#image(logo, height: 1.16cm)],
-        [#align(right)[#text(font: fontfamily.songti, size: 9pt,title.at(0))]])
+        [#align(right)[#songti(size2pt.xiaowu,title.at(0))]])
       )
     ],)
 
@@ -252,32 +293,33 @@
     
     { 
       align(center)[
-        #text(size: 16pt, font:fontfamily.heiti, weight: "bold")[
+        #heiti(size2pt.sanhao)[
           #v(1em) 
-          #title.at(0)
+          *#title.at(0)*
           #v(2em) 
         ] 
         #heading(
           outlined: false,
           numbering: none,
-          text(size: 14pt, font:fontfamily.heiti, weight: "medium")[
+          heiti(size2pt.sihao)[
             摘要
             #v(3em)
           ]
         )
       ]
       
-      set par(justify: false, leading: 0.77em, first-line-indent: 2em)
-      set text(size: 10.5pt, font:fontfamily.songti)
+      set par(justify: true, leading: 0.77em, first-line-indent: 2em)
+      set text(size: size2pt.wuhao, font: fontfamily.songti.regular)
+      
       [
-          #h(2em)#abstract.at(0)
+        #h(2em)#abstract.at(0)
       ]
 
       v(2em)
 
       [
-        #text(size: 12pt, font:fontfamily.heiti)[关键词：]
-        #text(size: 12pt, font:fontfamily.songti)[#keywords.at(0)]
+        #heiti(size2pt.xiaosi)[关键词：]
+        #songti(size2pt.wuhao)[#keywords.at(0)]
       ]
     }
 
@@ -287,23 +329,24 @@
 
     {
       align(center)[
-        #text(size: 16pt, font:fontfamily.songti, weight: "bold")[
+        #songti(size2pt.sanhao)[
           #v(1em) 
-          #upper(title.at(1))
+          *#upper(title.at(1))*
           #v(2em) 
         ] 
         #heading(
           outlined: false,
           numbering: none,
-          text(size: 14pt, font:fontfamily.songti, weight: "bold")[
-            ABSTRACT
+          songti(size2pt.sanhao)[
+            *ABSTRACT*
             #v(3em)
           ]
         )
       ]
       
       set par(justify: true, leading: 0.77em, first-line-indent: 2em)
-      set text(size: 10.5pt, font:fontfamily.songti)
+      set text(size: size2pt.wuhao, font: fontfamily.songti.regular)
+      
       [
           #h(2em)#abstract.at(1)
       ]
@@ -311,8 +354,8 @@
       v(2em)
 
       [
-        #text(size: 12pt, font:fontfamily.songti, weight: "bold")[Key words: ]
-        #text(size: 12pt, font:fontfamily.songti)[#keywords.at(1)]
+        #songti(size2pt.xiaosi)[*Key words: *]
+        #songti(size2pt.wuhao)[#keywords.at(1)]
       ]
     }
     
@@ -320,7 +363,7 @@
     
     // 目录和编号
     
-    align(center, text(size: 16pt, font:fontfamily.heiti, weight: "bold")[
+    align(center, text(size: size2pt.sanhao, font:fontfamily.heiti.bold)[
           #v(1em) 
           目录
           #v(1em) 
@@ -337,7 +380,7 @@
 
     
     show outline.entry: it => {
-      text(size: 10.5pt, font: fontfamily.songti)[
+      text(size: size2pt.wuhao, font: fontfamily.songti.regular)[
         #let bdy = it.body
         #bdy #box(width: 1fr, repeat(".")) #it.page.text.match(regex("第(.*?)页")).captures.at(0)
       ]
@@ -371,17 +414,17 @@
         level: 1
       ): it => block(width: 100%)[
         #set align(center)
-        #set text(16pt, weight: "bold", font: fontfamily.heiti)
+        #set text(size2pt.sanhao, weight: "bold", font: fontfamily.heiti.regular)
         #v(1em)
         #it
         #v(1em)
       ]
       
-      // set par(justify: true, first-line-indent: 2em)
+      set text(size: size2pt.wuhao, font: fontfamily.songti.regular)
       set par(justify: true, leading: 1.24em, first-line-indent: 2em)
       show par: set block(spacing: 1.24em)
       show heading: it => {
-        set text(weight: "bold", font: fontfamily.heiti, size: 12pt)
+        set text(weight: "bold", font: fontfamily.heiti.regular, size: size2pt.sanhao)
         set block(above: 1.5em, below: 1.5em)
         it
       } + v(-1em) + box()
