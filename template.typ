@@ -378,11 +378,10 @@
     
     set heading(numbering: number-until-with(3, "1.1.1"))
 
-    
     show outline.entry: it => {
       text(size: size2pt.wuhao, font: fontfamily.songti.regular)[
         #let bdy = it.body
-        #bdy #box(width: 1fr, repeat(".")) #it.page.text.match(regex("第(.*?)页")).captures.at(0)
+        #link(it.element.location(), bdy) #box(width: 1fr, repeat(".")) #it.page.text.match(regex("第(.*?)页")).captures.at(0)
       ]
     }
     
